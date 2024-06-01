@@ -20,14 +20,15 @@ else:
 
 
 def frames_to_video(frames, output_path, fps=30):
+    # print("frames[0].shape:",frames[0].shape)
     height, width, layers = frames[0].shape
     size = (width, height)
     out = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, size)
     
     for frame in frames:
-        out.write(frame)
+        out.write(cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))  # Ensure frame color format is correct for OpenCV
+        #out.write(frame)
     out.release()
-
 
 
 def save_images(webpage, visuals, image_path, aspect_ratio=1.0, width=256, use_wandb=False):

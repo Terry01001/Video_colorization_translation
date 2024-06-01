@@ -5,6 +5,7 @@ from PIL import Image
 import torchvision.transforms as transforms
 from skimage import color
 from data.base_dataset import BaseDataset, get_transform
+import torch
 
 class VideoColorizationDataset(BaseDataset):
     """This dataset class can load a video, extract frames, and convert frames for colorization."""
@@ -43,7 +44,12 @@ class VideoColorizationDataset(BaseDataset):
             ret, frame = self.cap.read()
             if not ret:
                 break
-            self.frames.append(frame)
+            # Ensure the frame is grayscale
+            if len(frame.shape) == 3 and frame.shape[2] == 3:
+                gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            else:
+                gray_frame = frame
+            self.frames.append(gray_frame)
         self.cap.release()
 
     def __getitem__(self, index):
@@ -59,13 +65,15 @@ class VideoColorizationDataset(BaseDataset):
             B_paths (str) - - image paths (same as A_paths)
         """
         frame = self.frames[index]
-        im = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+        # print(frame.shape)
+        im = Image.fromarray(frame)  # Directly use the gray frame
+        # print(im.size)
         im = self.transform(im)
         im = np.array(im)
-        lab = color.rgb2lab(im).astype(np.float32)
-        lab_t = transforms.ToTensor()(lab)
-        A = lab_t[[0], ...] / 50.0 - 1.0
-        B = lab_t[[1, 2], ...] / 110.0
+        im = im.astype(np.float32) / 255.0 * 2.0 - 1.0  # Normalize to [-1, 1]
+        im_t = transforms.ToTensor()(im)
+        A = im_t  # Single channel gray image
+        B = torch.zeros(2, *A.shape[1:])  # Placeholder for ab channels, which are zero for gray images
         return {'A': A, 'B': B, 'A_paths': self.video_path, 'B_paths': self.video_path}
 
     def __len__(self):

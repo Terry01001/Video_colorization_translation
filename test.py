@@ -34,6 +34,7 @@ from util.visualizer import save_images, frames_to_video
 from util import html
 from PIL import Image
 import numpy as np
+from util.util import tensor2im
 
 try:
     import wandb
@@ -79,7 +80,9 @@ if __name__ == '__main__':
             
             # Save the fake_B result to frames list
             fake_B = visuals['fake_B_rgb']
+            #print(fake_B.shape)  # (256,256,3)
             fake_B_image = Image.fromarray(fake_B.astype(np.uint8))
+            #print(fake_B_image.size) # (256,256)
             fake_B_image.save(img_path)
             frames.append(np.array(fake_B_image)) 
         
@@ -97,7 +100,7 @@ if __name__ == '__main__':
 
     # second stage test (cyclegan)
     elif 'results' in opt.dataroot:
-        os.makedirs(os.path.join(opt.results_dir, opt.name, opt.dataroot.split('/')[-1]), exist_ok=True)
+        os.makedirs(os.path.join(opt.results_dir, opt.name), exist_ok=True)
         # os.makedirs(os.path.join(opt.results_dir, opt.name, opt.dataroot.split('/')[-1], 'imgs'), exist_ok=True)
         frames = []
         for i, data in enumerate(dataset):
@@ -109,9 +112,9 @@ if __name__ == '__main__':
             if i % 500 == 0:  # save images to an HTML file
                 print('processing (%05d)-th image... %s' % (i + 1, img_path))
 
-            fake = visuals['fake'][0].cpu().numpy().transpose(1,2,0)
-            fake_image = Image.fromarray((fake*255).astype(np.uint8))
-            #fake_image.save(os.path.join(opt.results_dir, opt.name, opt.dataroot.split('/')[-1]))
+            im = tensor2im(visuals['fake'])
+            fake_image = Image.fromarray(im)
+            # fake_image.save(os.path.join(opt.results_dir, opt.name, opt.dataroot.split('/')[-1]), 'imgs')
             frames.append(np.array(fake_image))
 
         # convert frames to video

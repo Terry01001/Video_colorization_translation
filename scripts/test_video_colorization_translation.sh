@@ -18,7 +18,8 @@ do
 
 done
 
-# python test.py --dataroot ./datasets/colorization --name color_pix2pix --model videocolorization --dataset_mode videocolorization  --video_name "Beatles.mp4" --input_nc 1 --output_nc 2
+# python test.py --dataroot ./datasets/colorization --name color_pix2pix --model videocolorization --dataset_mode videocolorization  --video_name Beatles.mp4 --input_nc 1 --output_nc 2
+# python test.py --dataroot ./results/color_pix2pix/Beatles --name style_monet_pretrained --phase test --no_dropout
 
 
 
