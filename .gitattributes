@@ -25,3 +25,7 @@ results/style_cezanne_pretrained/Chaplin_Factory_output.mp4 filter=lfs diff=lfs 
 results/style_monet_pretrained/Beatles_output.mp4 filter=lfs diff=lfs merge=lfs -text
 results/style_monet_pretrained/road_output.mp4 filter=lfs diff=lfs merge=lfs -text
 results/style_vangogh_pretrained/Beatles_output.mp4 filter=lfs diff=lfs merge=lfs -text
+results/Beatles_concatenated_videos.mp4 filter=lfs diff=lfs merge=lfs -text
+results/Chaplin_Barber_concatenated_videos.mp4 filter=lfs diff=lfs merge=lfs -text
+results/Chaplin_Factory_concatenated_videos.mp4 filter=lfs diff=lfs merge=lfs -text
+
