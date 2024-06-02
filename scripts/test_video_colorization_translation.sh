@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ex
 
-FILENAMES=("Beatles.mp4" "Chaplin_Factory.mp4" "Chaplin_Barber.mp4")
+FILENAMES=("road.mp4") # "Beatles.mp4" "Chaplin_Factory.mp4" "Chaplin_Barber.mp4" "road.mp4"
 
 for FILENAME in "${FILENAMES[@]}"
 do
