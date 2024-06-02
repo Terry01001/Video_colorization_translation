@@ -1,0 +1,409 @@
+\documentclass[sigconf]{acmart}
+
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+%\usepackage{CJKutf8}
+\usepackage{caption}
+\usepackage[ruled,linesnumbered]{algorithm2e}
+\usepackage{color}
+\usepackage{indentfirst}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{amsthm}
+\usepackage{xeCJK}
+\usepackage{booktabs}
+\usepackage{diagbox}
+\usepackage{subcaption} % 或者使用 subfigure 宏包
+\setCJKmainfont{DFKai-SB} % 在 Windows 上設置標楷體
+
+\newtheorem{definition}{Definition}
+
+
+%\let\listofalgorithms\relax
+
+%\usepackage{algorithm}
+%\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+
+\titleformat{\section}[hang]{\bfseries\Large}{\thesection}{1em}{}
+
+
+
+
+\setlength{\parindent}{2em}
+\newcommand{\xfig}[1]{圖~\ref{#1}}
+\newcommand{\xfigs}[2]{圖~\ref{#1} and~\ref{#2}}
+\newcommand{\xq}[1]{\textcolor{red}{#1}}
+
+\newcommand{\xmold}[1]{\textcolor{red}{#1}} % original text
+\newcommand{\xmnew}[1]{\textcolor{blue}{#1}} % replacement text
+\newcommand{\xch}[2]{\xmold{\sout{#1}}\xmnew{#2}}
+
+
+\newcommand{\xmesni}{He-AdaBoost with varying $\gamma$ values in RBFSVM}
+\newcommand{\xmesnis}{He-AdaBoost$\mathbf{_{v\gamma}}$}
+\newcommand{\xmesnia}{{\xmesni} (\xmesnis)}
+
+\newcommand{\xmesniabstract}{He-AdaBoost with varying $\gamma$ value in SVM with radial basis function (RBFSVM)}
+
+\begin{document}
+
+
+
+\renewcommand\thesection{\arabic{section}}
+
+%\begin{CJK}{UTF8}{bkai}
+\title{人工智慧導論 第二組期末報告}
+\author{張碩文}
+\affiliation{%
+  \institution{B093040007}
+  \city{Kaohsiung}
+  \country{Taiwan}
+}
+\author{陳昱逢}
+\affiliation{%
+  \institution{B092040016}
+  \city{Kaohsiung}
+  \country{Taiwan}
+}
+
+\author{黃子耘}
+\affiliation{%
+  \institution{B094020037}
+  \city{Kaohsiung}
+  \country{Taiwan}
+}
+\author{李妙華}
+\affiliation{%
+  \institution{B093040072}
+  \city{Kaohsiung}
+  \country{Taiwan}
+}
+\author{陳義竑}
+\affiliation{%
+  \institution{B123040018}
+  \city{Kaohsiung}
+  \country{Taiwan}
+}
+
+
+
+\begin{abstract}
+  % Problem  
+	我們首先使用 perlin noise 隨機生成模擬自然環境，地圖上各點會依據不同環境，而有不同距離權重。本實驗的目標是利用蟻群演算法，找到螞蟻從圖中左上角到右下角的最佳化路徑，並且嘗試各種超參數去分析此地圖下哪種情況下最為合適。
+
+\end{abstract}
+
+
+
+
+\maketitle
+
+
+  
+\section{簡介}
+\label{sec:introduction}
+
+
+	想模擬一自然環境，並利用超參數的不同以及不同距離權重還有費洛蒙的保存率，來觀察實驗結果會有何不同的結果，並利用pygame來視覺化這些實驗的操作跟結果。
+ 
+\iffalse
+\begin{figure}[htb]
+  \vspace{-\baselineskip}  
+  \centering  
+  %\begin{center}
+    \resizebox{0.35\textwidth}{!}{\includegraphics{fig/VANET_communication.pdf}}
+    \caption{Communication types in C-ITS}
+    \label{fig:vanet_communication}
+  %\end{center}
+  \vspace{-\baselineskip}
+\end{figure}	 
+\fi
+	
+
+
+\section{相關研究}
+\label{sec:related_work}
+
+
+\subsection{地圖的生成}
+
+	如用隨機生成之地圖，地圖混亂度會很高，很像雜訊很多的圖片，不符合正常自然環境會存在的地圖；但使用perlin noise之後讓地圖更加有連續性，如此才有一片的草地、泥土、沙地，在 perlin noise 套件中可以設定octave參數，參數較大時，可以讓地圖中草地、泥土、沙地切割的區塊更細緻跟均勻散佈在地圖上。
+
+\begin{figure}[htb]
+  \centering
+  \begin{subfigure}{0.2\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{fig/map_noise.png} % 插入第一張圖片，替換 "image1" 為實際的文件名
+    \caption{Before using perlin noise}
+    \label{fig:sub1}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.2\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{fig/map.png} % 插入第二張圖片，替換 "image2" 為實際的文件名
+    \caption{After using perlin noise}
+    \label{fig:sub2}
+  \end{subfigure}
+\end{figure}
+
+
+
+	
+\subsection{蟻群演算法規則及定義}
+
+	有群螞蟻要從起點走到終點，在走路的過程中將會留下費洛蒙，而在越短距離內走完，則費洛蒙則會最濃，相反的越長距離走完則費洛蒙則會隨著不同區塊會有不同的蒸發率，而隨之變淡。以下有兩個公式來計算如何讓螞蟻判別該往何處移動。
+
+
+	公式 (\ref{eqn:update_pheremon}) 的上式在描述螞蟻的費洛蒙保存率更新，定義一常數為 $\rho$ 為費洛蒙揮發常數，則 $1- \rho$ 則表保存。而下式即為第 $k$ 只螞蟻的費洛蒙更新量。
+
+\begin{equation}
+  \label{eqn:update_pheremon}
+\left\{\begin{array}{ll}
+                 \tau_{ij}(t + 1) &= (1 - \rho)\tau_{ij}(t) + \Delta\tau_{ij} \\
+                 \Delta\tau_{ij} &= \sum_{k=1}^{n} \delta\tau_{ij}^{k}
+                \end{array} \right.
+\end{equation}
+
+
+
+
+公式 (\ref{eqn:path_choose}) 表示路徑選擇公式。	其中上式 $P^k_{ij}(t)$ 表第 $k$ 只螞蟻從起點走向終點的機率，$s$ 是第 $k$ 只螞蟻能抵達的所有點。$\tau_{ij}(t)$ 表 $t$ 是時刻，從起點到終點的費洛蒙濃度，$\eta_{is}(t)$ 表 $t$ 是時刻，從起點到終點的距離的倒數。$\alpha , \beta $ 則是我們可以定義的參數，也是本次實驗的重點，若想著重於費洛蒙的影響則可以調整 $\alpha$ 的大小，反之，若想看距離的影響則可以調整 $\beta$ 的大小。
+
+
+
+\begin{equation}
+  \label{eqn:path_choose}
+P^k_{ij}(t) = \left\{\begin{array}{ll}
+				\frac{\tau_{ij}(t)^\alpha \cdot \eta_{ij}(t)^\beta}{\sum_{s \in \text{allow}_k}  \tau_{is}(t)^\alpha \cdot \eta_{is}(t)^\beta,} & \text{if } s \in \text{allow}_k \\ 
+                0, & \text{if } s \notin \text{allow}_k.
+                \end{array} \right.
+\end{equation}
+
+\subsection{螞蟻的規則}
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+	\item 螞蟻可在地圖上可以走上、下、左、右、四個斜對角共八個方向。
+	\item 不能重複走相同的點。
+	\item 必須要成功地從起點走到終點才能留下自身的費洛蒙。
+	\item 若在草地、泥土、沙地的費洛蒙保存率可依據自身設定而有所不同。
+	\item 點跟點之間的距離要依據這兩個點本身的環境去計算 ( Ex : 從草地走到泥土...)。
+	\item 當地圖某個位置的費洛蒙濃度低於 10 的 -5 次方時，會將該位置的濃度依據本身的環境設定初始值。
+\end{enumerate}
+
+\subsection{螞蟻行走距離權重及費洛蒙重置}
+
+我們的地圖有三個不同的區塊分別是草地、泥土、沙子，每一塊有著不同的距離權重，分別為1、3 和 5，表格 \ref{table:path_weight} 呈現路徑的權重。
+
+\begin{table}[htb]
+	\centering	
+	\caption{路徑的距離權重}
+	\vspace{-\baselineskip}
+	\label{table:path_weight}
+	\begin{tabularx}{0.5\textwidth}{|c|*{3}{>{\centering\arraybackslash}X|}}
+		\hline
+		\diagbox{起點}{終點} & \textbf{草地} & \textbf{泥土} & \textbf{沙子} \\ \hline
+		\textbf{草地}     & 2       & 4     & 6         \\ \hline
+		\textbf{泥土}     & 4       & 6     & 8         \\ \hline
+		\textbf{沙子}     & 6       & 8     & 10        \\ \hline
+	\end{tabularx}
+\end{table}
+
+當費洛蒙濃度低於 10 的 -5 次方，就要 reset 費洛蒙，各個環境的預設值如下：
+\begin{enumerate}[label=\textbf{\arabic*.}]
+	\item 草地費洛蒙: 1 / 草地距離權重 = $\frac{1}{1}$
+	\item 泥土費洛蒙: 1 / 泥土距離權重 = $\frac{1}{3}$
+	\item 沙地費洛蒙: 1 / 沙地距離權重 = $\frac{1}{5}$
+\end{enumerate}
+
+重設的目的是為了讓螞蟻跳出當前的 local optimal
+
+
+\section{Demo}
+\subsection{操作界面}
+
+
+\begin{figure}[htb]
+  \vspace{-\baselineskip}
+  \centering  
+  %\begin{center}
+    \resizebox{0.5\textwidth}{!}{\includegraphics{fig/UI.png}}
+    \caption{User Interface}
+    \label{fig:1}
+  %\end{center}
+  \vspace{-\baselineskip}
+\end{figure}
+
+
+
+\subsection{功能表}
+
+
+\vspace{-2mm}
+\begin{table}[H]
+	\centering	
+	\normalsize
+    \newcommand{\z}{\phantom{0}}
+    \caption{功能表}
+    \vspace{-\baselineskip}
+    \resizebox{0.5\textwidth}{!}{
+		\begin{tabular}[c]{|l|l|}
+			\hline
+			Start/Pause & 開始/暫停 \\
+			\hline
+			Clear & 清空畫面\\
+			\hline
+			grass & 設定費洛蒙在草地的蒸發率 $\pm 0.1$ \\
+			\hline
+			soil & 設定費洛蒙在泥土的蒸發率 $\pm 0.1$\\
+			\hline
+			sand & 設定費洛蒙在沙子的蒸發率 $\pm 0.1$ \\
+			\hline
+			alpha & 螞蟻重視費洛蒙的程度 $\pm 1.0$ \\
+			\hline
+			beta & 螞蟻重視距離的程度 $\pm 1.0$ \\
+			\hline
+			stop & 設定當跑到第幾個generation的時要停止程式 $\pm 50$ \\
+			\hline
+			space (空白鍵) & 切換費洛蒙 (紅點) 是否要顯示 \\
+			\hline
+		\end{tabular}
+	}
+	\label{table:feature}
+   \vspace{-\baselineskip}
+\end{table}
+
+
+
+
+\section{螞蟻參數實驗}
+\label{sec:proposed}
+
+\subsection{所使用的背景地圖}
+
+定義一個 40 * 40 二維網格世界，並利用 Perlin Noise 且 Octave 成 8，且測試三種隨機種子地圖(seed=100、200、300)。
+
+
+\subsection{參數設定}
+
+一個實驗的 generation 會有 200 隻螞蟻，Q 設定 100，並在固定的十個種子碼下，跑完 750 個 generation 即停止搜尋。
+ 本實驗嘗試了三組保存率，組合一(距離權重越低則費洛蒙保存率越高)、組合二(不論距離權重為何，費洛蒙保存率皆相同)、組合三(距離權重越高則費洛蒙保存率越高)；
+
+
+本實驗中 $\alpha + \beta = 6$，總共測試了五組($\alpha , \beta$) = (1, 5)、(2, 4)、(3, 3)、(4, 2)、(5, 1)，所以($\alpha , \beta$) 和費洛蒙保存率的組合共有 15 組參數可以測試。
+
+
+\subsection{實驗結果呈現}
+
+\begin{table}[htb]
+	\centering
+	\small
+	\caption{MAP\_100}
+	\vspace{-\baselineskip}
+	\label{table:path_weight}
+	\begin{tabularx}{0.5\textwidth}{|c|*{5}{>{\centering\arraybackslash}X|}}
+		\hline
+		\diagbox{組合}{($\alpha$,$\beta$)}   & \textbf{(1,5)}       & \textbf{(2,4)}        & \textbf{(3,3)} & \textbf{(4,2)} & \textbf{(5,1)}   \\ \hline
+		\textbf{組合一}                      & $684 \pm 29$   & $608 \pm 18$    & $469 \pm 28$   & $486 \pm 29$  & $558 \pm 34$         \\ 
+		\textbf{組合二}                      & $532 \pm 28$   & $350 \pm 25$    & \textbf{229} $\boldsymbol{\pm}$  \textbf{28}   & $537 \pm 50$  & $583 \pm 48$         \\ 
+		\textbf{組合三}                      & $435 \pm 24$   & $326 \pm 13$   & $262 \pm 20$   & $536 \pm 30$  & $584 \pm 35$          \\  \hline
+	\end{tabularx}
+\end{table}
+
+\begin{figure}[htb]
+  \vspace{-\baselineskip}  
+  \centering  
+  %\begin{center}
+    \resizebox{0.5\textwidth}{!}{\includegraphics{fig/MAP100.png}}
+    \caption{MAP\_100}
+    \label{fig:1}
+  %\end{center}
+  \vspace{-\baselineskip}
+\end{figure}
+
+\vspace{-2mm}
+\begin{table}[htb]
+	\centering
+	\small
+	\caption{MAP\_200}
+	\vspace{-\baselineskip}
+	\label{table:path_weight}
+	\begin{tabularx}{0.5\textwidth}{|c|*{5}{>{\centering\arraybackslash}X|}}
+		\hline
+		\diagbox{組合}{($\alpha$,$\beta$)}   & \textbf{(1,5)}       & \textbf{(2,4)}        & \textbf{(3,3)} & \textbf{(4,2)} & \textbf{(5,1)}   \\ \hline
+		\textbf{組合一}                      & $556 \pm 54$   & $558 \pm 34$    & $451 \pm 76$   & $450 \pm 24$  & $474 \pm 38$         \\ 
+		\textbf{組合二}                      & $465 \pm 23$   & $319 \pm 30$    & \textbf{233} $\boldsymbol{\pm}$  \textbf{66}   & $514 \pm 51$  & $517 \pm 35$         \\ 
+		\textbf{組合三}                      & $430 \pm 30$   & $343 \pm 16$   & $461 \pm 72$   & $512 \pm 45$   & $520 \pm 38$          \\  \hline
+	\end{tabularx}
+\end{table}
+
+\begin{figure}[htb]
+  \vspace{-\baselineskip}  
+  \centering  
+  %\begin{center}
+    \resizebox{0.5\textwidth}{!}{\includegraphics{fig/MAP200.png}}
+    \caption{MAP\_200}
+    \label{fig:2}
+  %\end{center}
+  \vspace{-\baselineskip}
+\end{figure}
+
+\begin{table}[H]
+	\centering
+	\small
+	\caption{MAP\_300}
+	\vspace{-\baselineskip}
+	\label{table:path_weight}
+	\begin{tabularx}{0.5\textwidth}{|c|*{5}{>{\centering\arraybackslash}X|}}
+		\hline
+		\diagbox{組合}{($\alpha$,$\beta$)}   & \textbf{(1,5)}       & \textbf{(2,4)}        & \textbf{(3,3)}                           & \textbf{(4,2)}   & \textbf{(5,1)}      \\  \hline
+		\textbf{組合一}                      & $469 \pm 45$   & $445 \pm 46$                & $291 \pm 52$                             & $395 \pm 22$    & $432 \pm 20$         \\ 
+		\textbf{組合二}                      & $391 \pm 29$   & $270 \pm 13$                & \textbf{160} $\boldsymbol{\pm}$  \textbf{9}       & $406 \pm 38$    & $464 \pm 22$         \\ 
+		\textbf{組合三}                      & $327 \pm 26$   & $256 \pm 9$                 & $171 \pm 5$                              & $250 \pm 98$    & $454 \pm 42$          \\  \hline
+	\end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+  \vspace{-\baselineskip}  
+  \centering  
+  %\begin{center}
+    \resizebox{0.5\textwidth}{!}{\includegraphics{fig/MAP300.png}}
+    \caption{MAP\_300}
+    \label{fig:3}
+  %\end{center}
+  \vspace{-\baselineskip}
+\end{figure}
+
+	
+
+\section{實驗結果分析}
+
+根據上方三張不同種子碼的地圖中皆可大致觀察出一個趨勢，不論費洛蒙保留率的組合為何，當($\alpha$,$\beta$)=(3,3) 的時候，較容易找到更佳的解。並且在3個隨機種子地圖來看，皆是環境費洛蒙保留率皆為 0.6 時，再加上($\alpha$,$\beta$)=(3,3)時，這樣的參數組合會是15組中最好的結果。
+
+
+
+
+\section{結論和未來展望}
+\label{sec:simulation}
+
+在本實驗的地圖中，雖然各個環境下各自的環境權重，我們原本預計賀爾蒙的影響會比距離的影響更為重要。但在我們的實驗中，更好的解是各個環境(泥土、草地、沙子)的費洛蒙保留率要一樣，且($\alpha$,$\beta$)的組合反而是費洛蒙跟距離重要性一樣為最好。
+ 希望在未來可以嘗試不同Noise 方式生成地圖，螞蟻選擇路徑的方式，新增螞蟻的天敵，讓實驗更加貼近真實環境。
+
+
+
+\bibliographystyle{IEEEtran} 
+\bibliography{reference}
+
+\nocite{ACO}
+\nocite{ANT}
+\nocite{EMOJI}
+
+\end{document}
