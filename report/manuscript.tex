@@ -1,409 +1,195 @@
-\documentclass[sigconf]{acmart}
-
-\usepackage{fontspec}
-\setmainfont{Times New Roman}
-%\usepackage{CJKutf8}
+\documentclass[a4paper, 12pt]{article}
+%\usepackage{fontspec}
+%\setmainfont{Times New Roman}
+\usepackage{CJKutf8}
 \usepackage{caption}
 \usepackage[ruled,linesnumbered]{algorithm2e}
 \usepackage{color}
 \usepackage{indentfirst}
-\usepackage{natbib}
+% \usepackage{natbib}
 \usepackage{graphicx}
 \usepackage{float}
-\usepackage{enumitem}
-\usepackage{titlesec}
-\usepackage{tabularx}
 \usepackage{amsmath}
-\usepackage{multirow}
-\usepackage{colortbl}
-\usepackage{amsthm}
-\usepackage{xeCJK}
-\usepackage{booktabs}
-\usepackage{diagbox}
-\usepackage{subcaption} % 或者使用 subfigure 宏包
-\setCJKmainfont{DFKai-SB} % 在 Windows 上設置標楷體
-
-\newtheorem{definition}{Definition}
-
-
-%\let\listofalgorithms\relax
-
-%\usepackage{algorithm}
-%\usepackage{algorithmicx}
+% \let\Bbbk\relax %% fix bug
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amstext}
+\usepackage{amsopn}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{boxedminipage}
+\usepackage{enumerate}
+\usepackage{url}
+\usepackage{times}
+% \usepackage[pdftex]{graphicx}
+\usepackage{epsfig}
+\usepackage{epsf}
+%\usepackage{graphics}
+\usepackage{caption}
+\usepackage{subfigure}
 \usepackage{algpseudocode}
-
-
-\titleformat{\section}[hang]{\bfseries\Large}{\thesection}{1em}{}
-
-
-
-
+%\PassOptionsToPackage{bookmarks={false}}{hyperref}
+%%%%%%%%%%%%
+\usepackage{placeins}
+\usepackage{comment}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{dblfloatfix}
+\usepackage{bm}
+\usepackage{multicol}
+\usepackage{hyperref}
+% \usepackage{notoccite}
+% \usepackage{soul}
+% \usepackage{subfigure}
+\linespread{1.5}
 \setlength{\parindent}{2em}
-\newcommand{\xfig}[1]{圖~\ref{#1}}
-\newcommand{\xfigs}[2]{圖~\ref{#1} and~\ref{#2}}
-\newcommand{\xq}[1]{\textcolor{red}{#1}}
+\setlength{\hoffset}{0in}
+\setlength{\voffset}{0in}
+\setlength{\oddsidemargin}{0.05in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{0in}
+\setlength{\headheight}{0.167in}
+\setlength{\headsep}{0.333in}
+\setlength{\textwidth}{6.268in}
+\setlength{\textheight}{9.393in}
+\setlength{\marginparsep}{0in}
+\setlength{\marginparwidth}{0in}
+\setlength{\marginparpush}{0in}
+\setlength{\footskip}{0.5in}
 
-\newcommand{\xmold}[1]{\textcolor{red}{#1}} % original text
-\newcommand{\xmnew}[1]{\textcolor{blue}{#1}} % replacement text
-\newcommand{\xch}[2]{\xmold{\sout{#1}}\xmnew{#2}}
+% \setCJKmainfont{Noto Serif CJK SC}
 
-
-\newcommand{\xmesni}{He-AdaBoost with varying $\gamma$ values in RBFSVM}
-\newcommand{\xmesnis}{He-AdaBoost$\mathbf{_{v\gamma}}$}
-\newcommand{\xmesnia}{{\xmesni} (\xmesnis)}
-
-\newcommand{\xmesniabstract}{He-AdaBoost with varying $\gamma$ value in SVM with radial basis function (RBFSVM)}
+\input lstset.tex
+\input macro.tex
 
 \begin{document}
 
+\renewcommand{\abstractname}{\large 摘要}
+
+\newcommand{\pluseq}{\mathrel{+}=}
+
+\begin{CJK}{UTF8}{bkai}
+	\captionsetup[figure]{labelfont={bf},name={圖},labelsep=period}
+    \captionsetup[table]{name={表格},labelsep=period}
+	\title{GAN 應用於黑白畫面上色 \& 畫面風格轉換}
+	\author{B093040007 張碩文 \\ B092040016 陳昱逢}
+	\date{}
+	\maketitle
+    \section{Motivation \& Features}
+		\subsection{Motivation}
+		作為一個喜愛 1950-60 年代音樂的愛好者，我發現當時的影像資料多為黑白錄像，像是 The Beatles 和 Chuck Berry 等演唱會錄像。由於當時攝影技術的限制，在 youtube 現存的錄像大多沒有彩色版本。為了讓這些影像整體的觀看感可更加逼真，本專案採用 GAN 生成對抗網絡模型去生成彩色影像，並轉換成各式各樣的藝術風格影片。
+		\subsection{Features}
+			\subsubsection{技術背景}
+			\begin{enumerate}
+				\item 本專案採用了 Conditional GAN（CGAN）\cite{pix2pix} 和 Cycle GAN \cite{cyclegan} 兩種生成對抗網絡模型。CGAN \cite{pix2pix}  用於將黑白影片自動上色，而 Cycle GAN \cite{cyclegan} 則將上色後的影片轉換成四種藝術風格：Monet、Van Gogh、Cezanne 和 Ukiyo-e
+				\item CGAN \cite{pix2pix} 的理論參考自 Isola 等人於 2017 年 CVPR 發佈的論文《Image-to-Image Translation with Conditional Adversarial Networks》
+				\item Cycle GAN \cite{cyclegan} 的理論參考自 Zhu 等人於 2017 年 CVPR 發佈的論文《Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks》 
+			\end{enumerate}
+			\subsubsection{技術挑戰}
+			兩篇論文的方法實作細節均在 Github \cite{torch-cyclegan-pix2pix} 上有提供程式碼和相關的預訓練模型，然而將黑白影片上色的模型，未提供預訓練模型和訓練資料集，因此需自行收集資料後再使用提供的訓練模型之程式碼訓練，在本專案中，使用一張 RTX 3090 訓練仍需耗時 5 小時才訓練完成，在調整模型上會有大量的時間成本，且訓練資料集上雖蒐集了 4000 張圖片，但結果上仍有上色不穩定的情況發生。
+			\subsubsection{本專案優勢}
+			\begin{enumerate}
+				\item 由於兩篇論文所提供的程式碼均有 yml 檔，因此在環境安裝時，可非常有效率地完成，執行程式也能避免版本不相容的問題。
+				\item 直接使用 Github \cite{torch-cyclegan-pix2pix} 上現有程式碼進行修改，節省開發時間。
+			\end{enumerate}
+    \section{Method}
+		\subsection{Overall architecture \& Data Preprocessing}
+
+			\begin{figure}[tbh]
+				\centering
+				\includegraphics[width=0.8\textwidth]{src/Overall_Architecture.pdf}
+				\caption{架構圖}
+				\label{fig-Overall_Architecture}
+			\end{figure}
+			
+			該架構圖共可分為兩大部分，把黑白影片上色用的 Conditional GAN (Colorization) \cite{pix2pix}，以及風格轉換用的 Cycle GAN \cite{cyclegan}，在原始影片進入模型前需經過三個前處理步驟。
+			\begin{enumerate}
+				\item 圖片 resize 成 $(286, 286)$
+				\item 使用 Crop 擷取中間的區塊變成 $(256, 256)$
+				\item 轉乘 Lab 的形式，並拆成 L 和 ab 兩個部分
+			\end{enumerate}
+			其中 Lab 的 $L$ 代表該圖片的亮度，$a$ 代表紅綠軸上的的座標，$b$ 代表黃藍軸上的座標。
+			最後僅有 L 通道的圖片(灰階圖)，其 shape 為 $(1, 256, 256)$，輸入到 Colorization model 轉成彩色圖片後，再使用 Cycle GAN 轉成 Monet、Van Gogh、Cezanne 和 Ukiyo-e 四種風格的影片。
+			
+		\subsection{Conditional GAN (CGAN)}
+			\begin{figure}[tbh]
+				\centering
+				\includegraphics[width=0.8\textwidth]{src/CGAN.png}
+				\caption{Conditional GAN 內部架構圖 \cite{hungyiML}}
+				\label{fig-CGAN}
+			\end{figure}
+			如\xfig{fig-CGAN}所示，Conditional GAN 內部可分為兩個部分，$G$ (Generator) 和 $D$ (Discrminator)，該模型需成對的資料集進行訓練，其中 $G$ 的輸入為一張灰階的圖 $x$ 和隨機從已知的機率分布中隨機抽取出的向量 $Z$，且這邊的灰階圖可直接視為條件輸入，$G$ 的輸出為一張彩圖 $G(x, z)$，這時 $D$ 會同時接收 Generator 產生的彩圖和原始圖片的彩圖，再去分辨哪張彩圖是原始圖片，若分類結果越準，輸出的 scalar 值會越大，該 scalar 的計算方式如下式：
+			\begin{equation}
+				\mathcal{L}_{cGAN}(G,D) = E_{x,y}\left[ logD(x,y) \right] + E_{x,z}\left[ log(1 - D(x,G(x,z))) \right]
+			\end{equation}
+			此模型其最佳化目標為找到一組 $G$ 和 $D$，$D$ 要最大化 scalar 的值，同時 $G$ 要最小化 $D$ 所產生的 scalar，其目標函數如下式:
+			\begin{equation}
+				\arg \min_G \max_D \mathcal{L}_{\text{cGAN}}(G, D)
+			\end{equation}
+			\subsubsection{Generator Architecture}
+			\begin{enumerate}
+				\item Input Layer，其中 Input shape $(1, 256, 256)$  (L 通道)
+				\item 8 層 downsampler
+				\item 8 層 upsampler
+				\item Output Layer，其中 Output shape $(2, 256, 256)$ (ab 通道)
+			\end{enumerate}
+
+			\subsubsection{Discrminator Architecture}
+			\begin{enumerate}
+				\item 1 層 Input Layer (Conv2D)，其中 Input shape $(3, 256, 256)$ 的 Lab 圖片
+				\item 3 層 Intermediate Layer (Conv2D)
+				\item 1 層 Output Layer (Conv2D)，其中 Output shape 是一個 scalar ，分數越高，代表 Discrminator 越強
+			\end{enumerate}
 
 
-\renewcommand\thesection{\arabic{section}}
+			
+		\subsection{Cycle GAN}
+		
+		\begin{figure}[tbh]
+			\centering
+			\includegraphics[width=0.65\textwidth]{src/cyclegan.pdf}
+			\caption{Cycle GAN 內部架構圖 \cite{medium}}
+			\label{fig-CycleGAN_Architecture}
+		\end{figure}
+		\xfig{fig-CycleGAN_Architecture}展示 Cycle GAN 方法， 主要用於不對稱的資料集訓練，因此可進行風格轉換等任務，Cycle GAN 有兩個 Generator 兩個 Discrminator，訓練中加入了 Consistency loss，主要希望將照片經過兩個 Generator 轉換後，能夠達成重建影像的目的。整個 Cycle GAN 的學習目標如下式:
+		
+		\begin{equation}
+			\begin{aligned}
+			\mathcal{L}_{\text{CycleGAN}}(G, F, D_x, D_y) = &
+			\mathbb{E}_{y \sim p_{\text{data}}(y)} \left[ \log D_y(y) \right] + \mathbb{E}_{x \sim p_{\text{data}}(x)} \left[ \log (1 - D_y(G(x))) \right] \\
+			&+ \mathbb{E}_{x \sim p_{\text{data}}(x)} \left[ \log D_x(x) \right] + \mathbb{E}_{y \sim p_{\text{data}}(y)} \left[ \log (1 - D_x(F(y))) \right] \\
+			&+ \lambda_{\text{cyc}(x)} \mathbb{E}_{x \sim p_{\text{data}}(x)} \left[ \| F(G(x)) - x \|_1 \right] \\
+			&+ \lambda_{\text{cyc}(y)} \mathbb{E}_{y \sim p_{\text{data}}(y)} \left[ \| G(F(y)) - y \|_1 \right],
+			\end{aligned}
+		\end{equation}
+			
+		
+		跟一般 GAN 的 Generator 使用 U-Net 不一樣的是，其 Generator 是基於 ResNet 架構，原因為 U-Net 比較適合用在成對的資料集上，因為 U-Net 中的 skip connection 會把每一層取到的特徵在後面結合起來。但對於不成對的資料集問題，我們需要將一個分佈的資料，根據其特徵以及輪廓，轉換到另一目標分佈的資料上，因此採用 ResNet 在萃取特徵上表現較好。在實作細節中，Cycle GAN 使用 LSGAN \cite{lsgan} 的損失函數代替了 negative log liklihood，也加入了 Identity Loss 等技巧。
+		
+	\section{Experimental Results}
 
-%\begin{CJK}{UTF8}{bkai}
-\title{人工智慧導論 第二組期末報告}
-\author{張碩文}
-\affiliation{%
-  \institution{B093040007}
-  \city{Kaohsiung}
-  \country{Taiwan}
-}
-\author{陳昱逢}
-\affiliation{%
-  \institution{B092040016}
-  \city{Kaohsiung}
-  \country{Taiwan}
-}
+	\subsection{資料收集}
 
-\author{黃子耘}
-\affiliation{%
-  \institution{B094020037}
-  \city{Kaohsiung}
-  \country{Taiwan}
-}
-\author{李妙華}
-\affiliation{%
-  \institution{B093040072}
-  \city{Kaohsiung}
-  \country{Taiwan}
-}
-\author{陳義竑}
-\affiliation{%
-  \institution{B123040018}
-  \city{Kaohsiung}
-  \country{Taiwan}
-}
-
-
-
-\begin{abstract}
-  % Problem  
-	我們首先使用 perlin noise 隨機生成模擬自然環境，地圖上各點會依據不同環境，而有不同距離權重。本實驗的目標是利用蟻群演算法，找到螞蟻從圖中左上角到右下角的最佳化路徑，並且嘗試各種超參數去分析此地圖下哪種情況下最為合適。
-
-\end{abstract}
-
-
-
-
-\maketitle
-
-
-  
-\section{簡介}
-\label{sec:introduction}
-
-
-	想模擬一自然環境，並利用超參數的不同以及不同距離權重還有費洛蒙的保存率，來觀察實驗結果會有何不同的結果，並利用pygame來視覺化這些實驗的操作跟結果。
- 
-\iffalse
-\begin{figure}[htb]
-  \vspace{-\baselineskip}  
-  \centering  
-  %\begin{center}
-    \resizebox{0.35\textwidth}{!}{\includegraphics{fig/VANET_communication.pdf}}
-    \caption{Communication types in C-ITS}
-    \label{fig:vanet_communication}
-  %\end{center}
-  \vspace{-\baselineskip}
-\end{figure}	 
-\fi
+	訓練資料收集了 4000 張圖片，其中 3400 張來自 MS COCO \cite{mscoco}，600 張來自 \cite{lab2rgb}，且皆是隨機挑選，驗證集收集 75 張圖片 \cite{lab2rgb}。 測試機收集了四部影片，其中 Beatles 一部，卓別林兩部，道路縮時攝影一部。
 	
 
 
-\section{相關研究}
-\label{sec:related_work}
 
+	\subsection{Experimental Results}
 
-\subsection{地圖的生成}
+	完整 demo 影片已存放至：
+	\href{https://drive.google.com/drive/folders/1SVA7trdCwTGiufNew1d3kUPHCUO1aqrz?usp=drive_link}{Demo Video Link}
 
-	如用隨機生成之地圖，地圖混亂度會很高，很像雜訊很多的圖片，不符合正常自然環境會存在的地圖；但使用perlin noise之後讓地圖更加有連續性，如此才有一片的草地、泥土、沙地，在 perlin noise 套件中可以設定octave參數，參數較大時，可以讓地圖中草地、泥土、沙地切割的區塊更細緻跟均勻散佈在地圖上。
+    \section{Conclusion \& Future work}
 
-\begin{figure}[htb]
-  \centering
-  \begin{subfigure}{0.2\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{fig/map_noise.png} % 插入第一張圖片，替換 "image1" 為實際的文件名
-    \caption{Before using perlin noise}
-    \label{fig:sub1}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}{0.2\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{fig/map.png} % 插入第二張圖片，替換 "image2" 為實際的文件名
-    \caption{After using perlin noise}
-    \label{fig:sub2}
-  \end{subfigure}
-\end{figure}
+	本專案結合了 Conditional GAN 以及 Cycle GAN 來完成黑白影像上色以及轉換成其他藝術風格。我們在訓練 Colorization model 時都是給定圖片資料集，可能對於連續影像的上色會有色塊不連續的問題，視覺上有不協調性，那也會影響後續的風格轉換的結果。
+	由實驗結果可以看出，對於背景屬於靜態的畫面時，自動上色的結果較好，而風格轉換時，對於有藝術品的特徵時，表現較好。
 
-
-
-	
-\subsection{蟻群演算法規則及定義}
-
-	有群螞蟻要從起點走到終點，在走路的過程中將會留下費洛蒙，而在越短距離內走完，則費洛蒙則會最濃，相反的越長距離走完則費洛蒙則會隨著不同區塊會有不同的蒸發率，而隨之變淡。以下有兩個公式來計算如何讓螞蟻判別該往何處移動。
-
-
-	公式 (\ref{eqn:update_pheremon}) 的上式在描述螞蟻的費洛蒙保存率更新，定義一常數為 $\rho$ 為費洛蒙揮發常數，則 $1- \rho$ 則表保存。而下式即為第 $k$ 只螞蟻的費洛蒙更新量。
-
-\begin{equation}
-  \label{eqn:update_pheremon}
-\left\{\begin{array}{ll}
-                 \tau_{ij}(t + 1) &= (1 - \rho)\tau_{ij}(t) + \Delta\tau_{ij} \\
-                 \Delta\tau_{ij} &= \sum_{k=1}^{n} \delta\tau_{ij}^{k}
-                \end{array} \right.
-\end{equation}
-
-
-
-
-公式 (\ref{eqn:path_choose}) 表示路徑選擇公式。	其中上式 $P^k_{ij}(t)$ 表第 $k$ 只螞蟻從起點走向終點的機率，$s$ 是第 $k$ 只螞蟻能抵達的所有點。$\tau_{ij}(t)$ 表 $t$ 是時刻，從起點到終點的費洛蒙濃度，$\eta_{is}(t)$ 表 $t$ 是時刻，從起點到終點的距離的倒數。$\alpha , \beta $ 則是我們可以定義的參數，也是本次實驗的重點，若想著重於費洛蒙的影響則可以調整 $\alpha$ 的大小，反之，若想看距離的影響則可以調整 $\beta$ 的大小。
-
-
-
-\begin{equation}
-  \label{eqn:path_choose}
-P^k_{ij}(t) = \left\{\begin{array}{ll}
-				\frac{\tau_{ij}(t)^\alpha \cdot \eta_{ij}(t)^\beta}{\sum_{s \in \text{allow}_k}  \tau_{is}(t)^\alpha \cdot \eta_{is}(t)^\beta,} & \text{if } s \in \text{allow}_k \\ 
-                0, & \text{if } s \notin \text{allow}_k.
-                \end{array} \right.
-\end{equation}
-
-\subsection{螞蟻的規則}
-
-\begin{enumerate}[label=\textbf{\arabic*.}]
-	\item 螞蟻可在地圖上可以走上、下、左、右、四個斜對角共八個方向。
-	\item 不能重複走相同的點。
-	\item 必須要成功地從起點走到終點才能留下自身的費洛蒙。
-	\item 若在草地、泥土、沙地的費洛蒙保存率可依據自身設定而有所不同。
-	\item 點跟點之間的距離要依據這兩個點本身的環境去計算 ( Ex : 從草地走到泥土...)。
-	\item 當地圖某個位置的費洛蒙濃度低於 10 的 -5 次方時，會將該位置的濃度依據本身的環境設定初始值。
-\end{enumerate}
-
-\subsection{螞蟻行走距離權重及費洛蒙重置}
-
-我們的地圖有三個不同的區塊分別是草地、泥土、沙子，每一塊有著不同的距離權重，分別為1、3 和 5，表格 \ref{table:path_weight} 呈現路徑的權重。
-
-\begin{table}[htb]
-	\centering	
-	\caption{路徑的距離權重}
-	\vspace{-\baselineskip}
-	\label{table:path_weight}
-	\begin{tabularx}{0.5\textwidth}{|c|*{3}{>{\centering\arraybackslash}X|}}
-		\hline
-		\diagbox{起點}{終點} & \textbf{草地} & \textbf{泥土} & \textbf{沙子} \\ \hline
-		\textbf{草地}     & 2       & 4     & 6         \\ \hline
-		\textbf{泥土}     & 4       & 6     & 8         \\ \hline
-		\textbf{沙子}     & 6       & 8     & 10        \\ \hline
-	\end{tabularx}
-\end{table}
-
-當費洛蒙濃度低於 10 的 -5 次方，就要 reset 費洛蒙，各個環境的預設值如下：
-\begin{enumerate}[label=\textbf{\arabic*.}]
-	\item 草地費洛蒙: 1 / 草地距離權重 = $\frac{1}{1}$
-	\item 泥土費洛蒙: 1 / 泥土距離權重 = $\frac{1}{3}$
-	\item 沙地費洛蒙: 1 / 沙地距離權重 = $\frac{1}{5}$
-\end{enumerate}
-
-重設的目的是為了讓螞蟻跳出當前的 local optimal
-
-
-\section{Demo}
-\subsection{操作界面}
-
-
-\begin{figure}[htb]
-  \vspace{-\baselineskip}
-  \centering  
-  %\begin{center}
-    \resizebox{0.5\textwidth}{!}{\includegraphics{fig/UI.png}}
-    \caption{User Interface}
-    \label{fig:1}
-  %\end{center}
-  \vspace{-\baselineskip}
-\end{figure}
-
-
-
-\subsection{功能表}
-
-
-\vspace{-2mm}
-\begin{table}[H]
-	\centering	
-	\normalsize
-    \newcommand{\z}{\phantom{0}}
-    \caption{功能表}
-    \vspace{-\baselineskip}
-    \resizebox{0.5\textwidth}{!}{
-		\begin{tabular}[c]{|l|l|}
-			\hline
-			Start/Pause & 開始/暫停 \\
-			\hline
-			Clear & 清空畫面\\
-			\hline
-			grass & 設定費洛蒙在草地的蒸發率 $\pm 0.1$ \\
-			\hline
-			soil & 設定費洛蒙在泥土的蒸發率 $\pm 0.1$\\
-			\hline
-			sand & 設定費洛蒙在沙子的蒸發率 $\pm 0.1$ \\
-			\hline
-			alpha & 螞蟻重視費洛蒙的程度 $\pm 1.0$ \\
-			\hline
-			beta & 螞蟻重視距離的程度 $\pm 1.0$ \\
-			\hline
-			stop & 設定當跑到第幾個generation的時要停止程式 $\pm 50$ \\
-			\hline
-			space (空白鍵) & 切換費洛蒙 (紅點) 是否要顯示 \\
-			\hline
-		\end{tabular}
-	}
-	\label{table:feature}
-   \vspace{-\baselineskip}
-\end{table}
-
-
-
-
-\section{螞蟻參數實驗}
-\label{sec:proposed}
-
-\subsection{所使用的背景地圖}
-
-定義一個 40 * 40 二維網格世界，並利用 Perlin Noise 且 Octave 成 8，且測試三種隨機種子地圖(seed=100、200、300)。
-
-
-\subsection{參數設定}
-
-一個實驗的 generation 會有 200 隻螞蟻，Q 設定 100，並在固定的十個種子碼下，跑完 750 個 generation 即停止搜尋。
- 本實驗嘗試了三組保存率，組合一(距離權重越低則費洛蒙保存率越高)、組合二(不論距離權重為何，費洛蒙保存率皆相同)、組合三(距離權重越高則費洛蒙保存率越高)；
-
-
-本實驗中 $\alpha + \beta = 6$，總共測試了五組($\alpha , \beta$) = (1, 5)、(2, 4)、(3, 3)、(4, 2)、(5, 1)，所以($\alpha , \beta$) 和費洛蒙保存率的組合共有 15 組參數可以測試。
-
-
-\subsection{實驗結果呈現}
-
-\begin{table}[htb]
-	\centering
-	\small
-	\caption{MAP\_100}
-	\vspace{-\baselineskip}
-	\label{table:path_weight}
-	\begin{tabularx}{0.5\textwidth}{|c|*{5}{>{\centering\arraybackslash}X|}}
-		\hline
-		\diagbox{組合}{($\alpha$,$\beta$)}   & \textbf{(1,5)}       & \textbf{(2,4)}        & \textbf{(3,3)} & \textbf{(4,2)} & \textbf{(5,1)}   \\ \hline
-		\textbf{組合一}                      & $684 \pm 29$   & $608 \pm 18$    & $469 \pm 28$   & $486 \pm 29$  & $558 \pm 34$         \\ 
-		\textbf{組合二}                      & $532 \pm 28$   & $350 \pm 25$    & \textbf{229} $\boldsymbol{\pm}$  \textbf{28}   & $537 \pm 50$  & $583 \pm 48$         \\ 
-		\textbf{組合三}                      & $435 \pm 24$   & $326 \pm 13$   & $262 \pm 20$   & $536 \pm 30$  & $584 \pm 35$          \\  \hline
-	\end{tabularx}
-\end{table}
-
-\begin{figure}[htb]
-  \vspace{-\baselineskip}  
-  \centering  
-  %\begin{center}
-    \resizebox{0.5\textwidth}{!}{\includegraphics{fig/MAP100.png}}
-    \caption{MAP\_100}
-    \label{fig:1}
-  %\end{center}
-  \vspace{-\baselineskip}
-\end{figure}
-
-\vspace{-2mm}
-\begin{table}[htb]
-	\centering
-	\small
-	\caption{MAP\_200}
-	\vspace{-\baselineskip}
-	\label{table:path_weight}
-	\begin{tabularx}{0.5\textwidth}{|c|*{5}{>{\centering\arraybackslash}X|}}
-		\hline
-		\diagbox{組合}{($\alpha$,$\beta$)}   & \textbf{(1,5)}       & \textbf{(2,4)}        & \textbf{(3,3)} & \textbf{(4,2)} & \textbf{(5,1)}   \\ \hline
-		\textbf{組合一}                      & $556 \pm 54$   & $558 \pm 34$    & $451 \pm 76$   & $450 \pm 24$  & $474 \pm 38$         \\ 
-		\textbf{組合二}                      & $465 \pm 23$   & $319 \pm 30$    & \textbf{233} $\boldsymbol{\pm}$  \textbf{66}   & $514 \pm 51$  & $517 \pm 35$         \\ 
-		\textbf{組合三}                      & $430 \pm 30$   & $343 \pm 16$   & $461 \pm 72$   & $512 \pm 45$   & $520 \pm 38$          \\  \hline
-	\end{tabularx}
-\end{table}
-
-\begin{figure}[htb]
-  \vspace{-\baselineskip}  
-  \centering  
-  %\begin{center}
-    \resizebox{0.5\textwidth}{!}{\includegraphics{fig/MAP200.png}}
-    \caption{MAP\_200}
-    \label{fig:2}
-  %\end{center}
-  \vspace{-\baselineskip}
-\end{figure}
-
-\begin{table}[H]
-	\centering
-	\small
-	\caption{MAP\_300}
-	\vspace{-\baselineskip}
-	\label{table:path_weight}
-	\begin{tabularx}{0.5\textwidth}{|c|*{5}{>{\centering\arraybackslash}X|}}
-		\hline
-		\diagbox{組合}{($\alpha$,$\beta$)}   & \textbf{(1,5)}       & \textbf{(2,4)}        & \textbf{(3,3)}                           & \textbf{(4,2)}   & \textbf{(5,1)}      \\  \hline
-		\textbf{組合一}                      & $469 \pm 45$   & $445 \pm 46$                & $291 \pm 52$                             & $395 \pm 22$    & $432 \pm 20$         \\ 
-		\textbf{組合二}                      & $391 \pm 29$   & $270 \pm 13$                & \textbf{160} $\boldsymbol{\pm}$  \textbf{9}       & $406 \pm 38$    & $464 \pm 22$         \\ 
-		\textbf{組合三}                      & $327 \pm 26$   & $256 \pm 9$                 & $171 \pm 5$                              & $250 \pm 98$    & $454 \pm 42$          \\  \hline
-	\end{tabularx}
-\end{table}
-
-\begin{figure}[H]
-  \vspace{-\baselineskip}  
-  \centering  
-  %\begin{center}
-    \resizebox{0.5\textwidth}{!}{\includegraphics{fig/MAP300.png}}
-    \caption{MAP\_300}
-    \label{fig:3}
-  %\end{center}
-  \vspace{-\baselineskip}
-\end{figure}
-
-	
-
-\section{實驗結果分析}
-
-根據上方三張不同種子碼的地圖中皆可大致觀察出一個趨勢，不論費洛蒙保留率的組合為何，當($\alpha$,$\beta$)=(3,3) 的時候，較容易找到更佳的解。並且在3個隨機種子地圖來看，皆是環境費洛蒙保留率皆為 0.6 時，再加上($\alpha$,$\beta$)=(3,3)時，這樣的參數組合會是15組中最好的結果。
-
-
-
-
-\section{結論和未來展望}
-\label{sec:simulation}
-
-在本實驗的地圖中，雖然各個環境下各自的環境權重，我們原本預計賀爾蒙的影響會比距離的影響更為重要。但在我們的實驗中，更好的解是各個環境(泥土、草地、沙子)的費洛蒙保留率要一樣，且($\alpha$,$\beta$)的組合反而是費洛蒙跟距離重要性一樣為最好。
- 希望在未來可以嘗試不同Noise 方式生成地圖，螞蟻選擇路徑的方式，新增螞蟻的天敵，讓實驗更加貼近真實環境。
-
-
-
-\bibliographystyle{IEEEtran} 
-\bibliography{reference}
-
-\nocite{ACO}
-\nocite{ANT}
-\nocite{EMOJI}
+    \bibliographystyle{IEEEtran}
+    \bibliography{reference} 
+    
+\end{CJK}
 
 \end{document}
