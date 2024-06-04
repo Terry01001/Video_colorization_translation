@@ -1,5 +1,5 @@
 
-<img src='imgs/Chaplin_Barber.gif' align="right" width=768>
+<img src='imgs/Chaplin_Barber.gif' align="right" width=1000>
 
 <br><br><br>
 
@@ -98,8 +98,8 @@ ZeroCostDL4Mic Colab notebook: [CycleGAN](https://colab.research.google.com/gith
 
 - Clone this repo:
 ```bash
-git clone https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix
-cd pytorch-CycleGAN-and-pix2pix
+git clone https://github.com/Terry01001/Video_colorization_translation.git
+cd Video_colorization_translation
 ```
 
 - Install [PyTorch](http://pytorch.org) and 0.4+ and other dependencies (e.g., torchvision, [visdom](https://github.com/facebookresearch/visdom) and [dominate](https://github.com/Knio/dominate)).
