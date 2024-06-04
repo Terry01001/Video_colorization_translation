@@ -1,5 +1,5 @@
 
-<img src='imgs/Chaplin_Barber.gif' align="right" width=384>
+<img src='imgs/Chaplin_Barber.gif' align="right" width=768>
 
 <br><br><br>
 
