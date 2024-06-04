@@ -3,11 +3,8 @@ debug*
 datasets/facades
 datasets/horse2zebra
 datasets/maps
-checkpoints/style_*/** 
-#checkpoints
-results/**/**/*.png
-results/**/**/*.txt
-#results/
+checkpoints
+results/
 build/
 dist/
 *.png
