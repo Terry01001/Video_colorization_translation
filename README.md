@@ -8,6 +8,7 @@
 
 <img src='imgs/Overall_Architecture.jpg' width=480>
 
+This project use conditional GAN to colorize video and CycleGAN to achieve style transfer. Refer to [pytorch-CycleGAN-and-pix2pix](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix) for more information.
 
 
 ## Prerequisites
@@ -53,5 +54,5 @@ bash ./scripts/test_video_colorization_translation.sh
 ```
 
 ## Acknowledgments
-This project is based on [pytorch-CycleGAN-and-pix2pix)](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix), thanks to their hard work.
+This project is based on [pytorch-CycleGAN-and-pix2pix](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix), thanks to their hard work.
 
