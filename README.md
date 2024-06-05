@@ -8,7 +8,10 @@
 This project is based on [pytorch-CycleGAN-and-pix2pix)](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix), thanks to their hard work.
 
 
-<img src="https://phillipi.github.io/pix2pix/images/teaser_v3.png" width="800px"/>
+<object data="./report/src/Overall_Architecture.pdf"  width="800px" height="600px">
+    <embed src="./report/src/Overall_Architecture.pdf"  />
+    <p>This browser does not support PDFs. Please download the PDF to view it: <a href="./report/src/Overall_Architecture.pdf">Download PDF</a>.</p>
+</object>
 
 
 
