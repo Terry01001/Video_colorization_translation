@@ -1,17 +1,12 @@
 
-<img src='imgs/Chaplin_Barber.gif' align="right" width=1000>
+<img src='imgs/Chaplin_Barber.gif' align="right" width=1000> 
 
 <br><br><br>
 
 # Video colorization and translation using pix2pix and CycleGAN
 
-This project is based on [pytorch-CycleGAN-and-pix2pix)](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix), thanks to their hard work.
 
-
-<object data="./report/src/Overall_Architecture.pdf"  width="800px" height="600px">
-    <embed src="./report/src/Overall_Architecture.pdf"  />
-    <p>This browser does not support PDFs. Please download the PDF to view it: <a href="./report/src/Overall_Architecture.pdf">Download PDF</a>.</p>
-</object>
+<img src='imgs/Overall_Architecture.jpg' width=480>
 
 
 
