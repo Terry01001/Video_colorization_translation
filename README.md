@@ -29,7 +29,7 @@ cd Video_colorization_translation
   - For pip users, please type the command `pip install -r requirements.txt`.
   - For Conda users, you can create a new Conda environment using `conda env create -f environment.yml`.
 
-### Train colorization model
+### Train colorization model (pix2pix based)
 - You can train a colorization model with the following script:
 ```bash
 bash ./scripts/train_colorization.sh
@@ -37,7 +37,7 @@ bash ./scripts/train_colorization.sh
 After training, the model is saved at `./checkpoints/color_pix2pix/latest_net_G.pth`.
 
 
-### Apply a pre-trained model (CycleGAN)
+### Apply pre-trained models (CycleGAN)
 - You can download style_transfer pretrained models with the following instructions:
 ```bash
 bash ./scripts/download_cyclegan_model.sh style_monet
@@ -45,8 +45,7 @@ bash ./scripts/download_cyclegan_model.sh style_cezanne
 bash ./scripts/download_cyclegan_model.sh style_ukiyoe
 bash ./scripts/download_cyclegan_model.sh style_vangogh
 ```
-- The pretrained model is saved at `./checkpoints/{name}_pretrained/latest_net_G.pth`. Check [here](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix/blob/master/scripts/download_cyclegan_model.sh#L3) for all the available CycleGAN models.
-
+- The pretrained model is saved at `./checkpoints/{name}_pretrained/latest_net_G.pth`.
 
 - Then generate the results using
 ```bash
