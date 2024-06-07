@@ -1,4 +1,3 @@
-
 <img src='imgs/Chaplin_Barber.gif' align="right" width=1000> 
 
 <br><br><br>
@@ -8,7 +7,21 @@
 
 <img src='imgs/Overall_Architecture.jpg' width=480>
 
-This project use conditional GAN to colorize video and CycleGAN to achieve style transfer. Refer to [pytorch-CycleGAN-and-pix2pix](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix) for more information.
+This project leverages the power of conditional GANs to colorize grayscale videos and CycleGAN for style transfer. The colorization process uses the Pix2Pix model, while the style transfer is accomplished with CycleGAN. Please refer to [pytorch-CycleGAN-and-pix2pix](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix) for more information.
+
+
+## Project Overview
+
+### Video Colorization
+The video colorization process involves converting grayscale frames of a video into colorized frames using a Pix2Pix model. This model is trained on pairs of grayscale and color images to learn the mapping from grayscale to color.
+
+### Style Transfer
+Once the video frames are colorized, they can be further processed to transfer various artistic styles using CycleGAN. The CycleGAN model does not require paired images for training and can learn to translate an image from one domain (e.g., real photos) to another domain (e.g., Monet's paintings) with unpaired datasets.
+
+### Workflow
+1. **Colorize Grayscale Videos**: Using Pix2Pix, convert grayscale frames into color frames.
+2. **Style Transfer on Colorized Frames**: Apply different artistic styles to the colorized frames using pretrained CycleGAN models.
+3. **Video Reconstruction**: Combine the processed frames back into a video format.
 
 
 ## Prerequisites
