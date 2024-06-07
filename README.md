@@ -7,7 +7,7 @@
 
 <img src='imgs/Overall_Architecture.jpg' width=480>
 
-This project leverages the power of conditional GANs to colorize grayscale videos and CycleGAN for style transfer. The colorization process uses the Pix2Pix model, while the style transfer is accomplished with CycleGAN. Please refer to [pytorch-CycleGAN-and-pix2pix](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix) for more information.
+This project leverages the power of conditional GANs to colorize grayscale videos and CycleGAN for style transfer. The colorization process uses the Pix2Pix model, while the style transfer is accomplished with CycleGAN. The demo video can be viewed [here](https://drive.google.com/drive/folders/1SVA7trdCwTGiufNew1d3kUPHCUO1aqrz?usp=drive_link). Please refer to [pytorch-CycleGAN-and-pix2pix](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix) for more information.
 
 
 ## Project Overview
